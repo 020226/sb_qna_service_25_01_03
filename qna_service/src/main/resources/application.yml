@@ -1,4 +1,28 @@
 spring:
+  profiles:
+    active: dev # ????? dev ???? ??
   output:
     ansi:
-      enabled: always
+      enabled: always # ?? ?? ??
+  thymeleaf:
+    cache: false # ???? ?? ??
+    prefix: file:src/main/resources/templates/ # ???? ?? ??(? ??? ?? ??)
+    devtools:
+      livereload:
+        enabled: true
+      restart:
+        enabled: true
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/qna_service?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: sbsst
+    password: sbs123414
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # ??: none, validate, update, create, create-drop
+    properties:
+      hibernate:
+        show_sql: true # ???? SQL ?? ??
+        format_sql: true # ???? SQL? ???
+        use_sql_comments: true
