@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,5 +27,5 @@ public class Question {
   // 다만 만들면 해당 객체(질문객체)에서 관련된 답변을 찾을 때 편하다.
   // CascadeType.REMOVE : 질문이 삭제되면 답변도 같이 삭제된다.
   @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
-  private List<Answer> answerList;
+  private List<Answer> answerList = new ArrayList<>(); // nullPointException 방지 초기화
 }
