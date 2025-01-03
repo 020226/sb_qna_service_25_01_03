@@ -28,4 +28,10 @@ public class Question {
   // CascadeType.REMOVE : 질문이 삭제되면 답변도 같이 삭제된다.
   @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
   private List<Answer> answerList = new ArrayList<>(); // nullPointException 방지 초기화
+
+  // 외부에서 answerList 필드에 접근하는 것을 차단 = 캡슐화
+  public void addAnswer(Answer a) {
+    a.setQuestion(this);
+    answerList.add(a);
+  }
 }
