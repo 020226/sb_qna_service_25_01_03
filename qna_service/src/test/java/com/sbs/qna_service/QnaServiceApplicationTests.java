@@ -37,6 +37,8 @@ class QnaServiceApplicationTests {
 		// 모든 데이터 삭제
 		answerRepository.deleteAll();
 
+		answerRepository.clearAutoIncrement();
+
 		Question q1 = new Question();
 		q1.setSubject("sbb가 무엇인가요?");
 		q1.setContent("sbb에 대해서 알고 싶습니다.");
@@ -49,6 +51,12 @@ class QnaServiceApplicationTests {
 		q2.setContent("id는 자동으로 생성되나요?");
 		q2.setCreateDate(LocalDateTime.now());
 		questionRepository.save(q2);  // 두번째 질문 저장
+
+		Answer a1 = new Answer();
+		a1.setContent("네 자동으로 생성됩니다.");
+		a1.setQuestion(q2);  // 어떤 질문의 답변인지 알기위해서 Question 객체가 필요하다.
+		a1.setCreateDate(LocalDateTime.now());
+		answerRepository.save(a1);
 
 	}
 
@@ -192,7 +200,7 @@ class QnaServiceApplicationTests {
 		Optional<Question> oq = questionRepository.findById(2);
 		Question q = oq.get();
 	 	*/
-		
+
 		/*
 		// v2
 		Question q = questionRepository.findById(2).orElse(null);
@@ -204,4 +212,19 @@ class QnaServiceApplicationTests {
 		answerRepository.save(a);
 	}
 
+	/*
+	SELECT A.*, Q.*
+	FROM answer AS A
+	LEFT JOIN question AS Q
+	on Q.id = A.question_id
+	WHERE A.id = ?;
+	*/
+	@Test
+	@DisplayName("답변 데이터 조회")
+	void t010() {
+		Optional<Answer> oa = answerRepository.findById(1);
+		assertTrue(oa.isPresent());
+		Answer a = oa.get();
+		assertEquals(2, a.getQuestion().getId());
+	}
 }
