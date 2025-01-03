@@ -4,6 +4,7 @@ import com.sbs.qna_service.boundedContext.home.answer.Answer;
 import com.sbs.qna_service.boundedContext.home.answer.AnswerRepository;
 import com.sbs.qna_service.boundedContext.home.question.Question;
 import com.sbs.qna_service.boundedContext.home.question.QuestionRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -227,5 +228,21 @@ class QnaServiceApplicationTests {
 		assertTrue(oa.isPresent());
 		Answer a = oa.get();
 		assertEquals(2, a.getQuestion().getId());
+	}
+
+	// 테스트 코드에서는 Transactional을 붙여줘야 한다.
+	// findById 메서드를 실행하고 나면 DB가 끝어지기 때문에
+	// Transactional 어노테이션을 사용하면 메서드가 종료될 때까지 DB연결이 유지된다.
+	@Transactional // 암기
+	@Test
+	@DisplayName("질문을 통해 답변 찾기")
+	void t011() {
+		// SQL : SELECT * FROM question WHERE id = 2;
+		Optional<Question> oq = questionRepository.findById(2);
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+		List<Answer> answerList = q.getAnswerList();
+		assertEquals(1, answerList.size());
+		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
 	}
 }
