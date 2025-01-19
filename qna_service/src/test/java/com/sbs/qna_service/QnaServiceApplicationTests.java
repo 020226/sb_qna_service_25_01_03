@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,7 +60,6 @@ class QnaServiceApplicationTests {
 		q2.addAnswer(a1); // 질문과 답변을 한 로직을 통해서 처리
 		a1.setCreateDate(LocalDateTime.now());
 		answerRepository.save(a1);
-
 	}
 
 	@Test
@@ -236,13 +236,18 @@ class QnaServiceApplicationTests {
 	@Transactional // 메서드 내에서 트랜잭션이 유지된다!
 	@Test
 	@DisplayName("질문을 통해 답변 찾기")
+	@Rollback(false) // 테스트 메서드가 끝난 후에도 트랜젝션이 롤백되지 않고 커밋된다.
 	void t011() {
 		// SQL : SELECT * FROM question WHERE id = 2;
 		Optional<Question> oq = questionRepository.findById(2);
 		assertTrue(oq.isPresent());
 		Question q = oq.get(); // 테스트 환경에서는 get해서 가져온 뒤 DB연결을 끊음
 		// SQL : SELECT * FROM answer WHERE question_id = 2;
-		List<Answer> answerList = q.getAnswerList(); // DB 통신이 끊긴 뒤 answer를 가져 옴 => 실패		assertEquals(1, answerList.size());
+		List<Answer> answerList = q.getAnswerList(); // DB 통신이 끊긴 뒤 answer를 가져 옴 => 실패
+		assertEquals(1, answerList.size());
 		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
 	}
+
+
+
 }
