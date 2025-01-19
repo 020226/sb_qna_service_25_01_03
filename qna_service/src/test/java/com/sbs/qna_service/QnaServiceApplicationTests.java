@@ -233,7 +233,9 @@ class QnaServiceApplicationTests {
 	// 테스트 코드에서는 Transactional을 붙여줘야 한다.
 	// findById 메서드를 실행하고 나면 DB가 끝어지기 때문에
 	// Transactional 어노테이션을 사용하면 메서드가 종료될 때까지 DB연결이 유지된다.
-	@Transactional // 메서드 내에서 트랜잭션이 유지된다!
+	@Transactional // 메서드 내에서 트랜잭션이 유지된다! 실제 서버에서 JPA 프로그램들을 실행할 때는
+	// DB 세션이 종료되지 않아 이와 같은 오류가 발생하지 않는다.
+	// DB 세션이란 스프링 부트 애플리케이션과 데이터베이스 간의 연결을 뜻한다.
 	@Test
 	@DisplayName("질문을 통해 답변 찾기")
 	@Rollback(false) // 테스트 메서드가 끝난 후에도 트랜젝션이 롤백되지 않고 커밋된다.
