@@ -6,7 +6,7 @@ spring:
       enabled: always
   thymeleaf:
     cache: false
-    prefix: file:src/main/resources/templates/
+    prefix: classpath:/templates/
     devtools:
       livereload:
         enabled: true
